@@ -16,4 +16,3 @@ _temp
 src/app/**/*.js
 src/app/**/*.map
 src/data.json
-src/data.1.json
