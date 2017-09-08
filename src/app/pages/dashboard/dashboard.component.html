@@ -1,0 +1,26 @@
+<div class="krz-page container">
+  <div class="dashboard-main-content col-md-12">
+    <div class="row">
+      <h1 class="main-title text-center">{{pageTitle}}</h1>
+    </div>
+    <div class="row krz-summary-row">
+        <div class="text-center">
+            <button class="btn btn-large btn-primary" (click)="dashboardSummary()">Toggle Summary</button>
+        </div>
+    </div>
+    <div class="row" *ngIf="!detailsShown">
+      <div *ngFor="let country of countries" class="col-md-4">
+        <krz-brand-dashboard-card [data]="country" (click)="openFromCard($event, country)"></krz-brand-dashboard-card>
+      </div>
+    </div>
+    <div class="row krz-details-page" *ngIf="detailsShown">
+        <ngx-charts-pie-chart
+            [results]="details.single"
+            [legend]="true"
+            [explodeSlices]="false"
+            [labels]="true"
+            (select)="openFromChart($event)">
+        </ngx-charts-pie-chart>
+    </div>
+  </div>
+</div>
