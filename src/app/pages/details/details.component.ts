@@ -1,16 +1,16 @@
+import { CONSTANTS } from './../../constants/constants';
 import { Card } from './../../classes/card';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Product } from './../../classes/product';
 import { GlobalDataService } from './../../services/global-data.service';
 import { Component, OnInit } from '@angular/core';
-import { CONSTANTS } from "../../constants/constants";
 
 @Component({
   selector: 'krz-brand-details',
   templateUrl: './details.component.html'
 })
 export class DetailsComponent implements OnInit {
-  detailsShown: any;
+  detailsShown: boolean = false;
   private routeSubscribe: any;
   selectedCountry: string;
   selectedBrand: string;
@@ -20,7 +20,7 @@ export class DetailsComponent implements OnInit {
   pageTitle: string;
   tableData: Product[];
   brands: Card[] = [];
-  colTitles: string[] = ["Product Id", "Name", "Date", "Price", "Gender", "Color"];
+  colTitles: string[] = CONSTANTS.DETAILS_COLUMN_TITLES;
   allCountries: string[] = [];
   allBrands: string[] = [];
   allTypes: string[] = [];
@@ -46,15 +46,14 @@ export class DetailsComponent implements OnInit {
     this.getProductsBySelectedFilters(this.selectedCountry, this.selectedBrand, this.selectedType);
     this.updateTitle();
     this.prepareChartData();
-    this.selectedChart = localStorage.getItem('details-chart') || this.chartTypes[0].value;
-    this.detailsShown = localStorage.getItem('details-shown') || false;
-    localStorage.setItem('details-chart', this.selectedChart);
+    this.selectedChart = localStorage.getItem(CONSTANTS.SELECTED_CHART.DETAILS) || this.chartTypes[0].value;
+    localStorage.setItem(CONSTANTS.SELECTED_CHART.DETAILS, this.selectedChart);
   }
 
   prepareChartData() {
     this.details.single = [];
     this.tableData.forEach(item => {
-      let itemExists: boolean = false;
+      let itemExists = false;
       for (let i = 0; i < this.details.single.length; i++) {
         if (item.date.split('-')[0] === this.details.single[i].name) {
           this.details.single[i].value += parseFloat(item.price);
@@ -64,8 +63,8 @@ export class DetailsComponent implements OnInit {
       }
       if (!itemExists) {
         this.details.single.push({
-          "name": item.date.split('-')[0],
-          "value": parseFloat(item.price)
+          'name': item.date.split('-')[0],
+          'value': parseFloat(item.price)
         });
       }
     });
@@ -74,7 +73,7 @@ export class DetailsComponent implements OnInit {
   }
 
   sortChartDataByYear() {
-    this.details.single = this.details.single.sort((n1: any, n2: any) => parseInt(n2.name) - parseInt(n1.name));
+    this.details.single = this.details.single.sort((n1: any, n2: any) => parseInt(n2.name, 10) - parseInt(n1.name, 10));
   }
 
   updateTitle(): void {
@@ -82,12 +81,12 @@ export class DetailsComponent implements OnInit {
       this.pageTitle =
           this.tableData.length + ' ' +
           this.selectedType.toUpperCase() +
-          " PRODUCTS FOUND FOR " +
+          ' PRODUCTS FOUND FOR ' +
           this.selectedBrand.toUpperCase() +
-          " IN " +
+          ' IN ' +
           this.selectedCountry.toUpperCase();
     } else {
-      this.pageTitle = "NO DATA AVAILABLE FOR THE CURRENT FILTERS"
+      this.pageTitle = 'NO DATA AVAILABLE FOR THE CURRENT FILTERS';
     }
   }
 
@@ -101,24 +100,22 @@ export class DetailsComponent implements OnInit {
 
   changeCountry(country: string) {
     this.selectedCountry = country;
-    this.updateRouteParams();
-    this.getProductsBySelectedFilters(this.selectedCountry, this.selectedBrand, this.selectedType);
-    this.prepareChartData();
-    this.updateTitle();
+    this.updateData();
   }
 
   changeBrand(brand: string) {
     this.selectedBrand = brand;
-    this.updateRouteParams();
-    this.getProductsBySelectedFilters(this.selectedCountry, this.selectedBrand, this.selectedType);
-    this.prepareChartData();
-    this.updateTitle();
+    this.updateData();
   }
 
   changeType(type: string) {
     this.selectedType = type;
+    this.updateData();
+  }
+
+  updateData(): void {
     this.updateRouteParams();
-    this.getProductsBySelectedFilters(this.selectedCountry, this.selectedBrand, type);
+    this.getProductsBySelectedFilters(this.selectedCountry, this.selectedBrand, this.selectedType);
     this.prepareChartData();
     this.updateTitle();
   }
@@ -127,18 +124,8 @@ export class DetailsComponent implements OnInit {
     this.router.navigate(['/dashboard/' + this.selectedCountry + '/' + this.selectedBrand + '/' + this.selectedType]);
   }
 
-  summary(): void {
-    this.detailsShown = !this.detailsShown;
-    if(this.detailsShown == true) {
-      localStorage.setItem('details-shown', 'true')
-    } else {
-      localStorage.setItem('details-shown', 'false')
-    }
-  }
-
   changeChartType(value: string): void {
-    let target: any = this.chartTypes.filter(chart => chart.value === value);
     this.selectedChart = value;
-    localStorage.setItem('details-chart', value);
+    localStorage.setItem(CONSTANTS.SELECTED_CHART.DETAILS, value);
   };
 }

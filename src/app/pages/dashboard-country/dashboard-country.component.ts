@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Product } from './../../classes/product';
 import { GlobalDataService } from './../../services/global-data.service';
 import { Component, OnInit } from '@angular/core';
-import { CONSTANTS } from "../../constants/constants";
+import { CONSTANTS } from '../../constants/constants';
 
 @Component({
   selector: 'krz-brand-dashboard-country',
@@ -17,10 +17,10 @@ export class DashboardCountryComponent implements OnInit {
   pageTitle: string;
   productsForCountry: Product[];
   brands: Card[] = [];
-  detailsShown: any;
+  detailsShown: boolean = false;
   details: any = {
     single: []
-  }
+  };
 
   constructor(
     private route: ActivatedRoute,
@@ -32,14 +32,12 @@ export class DashboardCountryComponent implements OnInit {
     this.routeSubscribe = this.route.params.subscribe(params => {
        this.country = params['country'];
     });
-    this.productsForCountry = this.globalDataService.allProducts
-      .filter(product => product.country === this.country);
-    this.pageTitle = this.productsForCountry.length + " PRODUCTS FOUND FOR " + this.country.toUpperCase();
+    this.productsForCountry = this.globalDataService.allProducts.filter(product => product.country === this.country);
+    this.pageTitle = this.productsForCountry.length + ' PRODUCTS FOUND FOR ' + this.country.toUpperCase();
     this.getBrandsGroups();
     this.prepareChartData();
-    this.selectedChart = localStorage.getItem('dashboard-country-chart') || this.chartTypes[0].value;
-    this.detailsShown = localStorage.getItem('dashboard-country-details-shown') || false;
-    localStorage.setItem('dashboard-country-chart', this.selectedChart);
+    this.selectedChart = localStorage.getItem(CONSTANTS.SELECTED_CHART.DASHBOARD_COUNTRY) || this.chartTypes[0].value;
+    localStorage.setItem(CONSTANTS.SELECTED_CHART.DASHBOARD_COUNTRY, this.selectedChart);
   }
 
   getBrandsGroups(): void {
@@ -71,9 +69,9 @@ export class DashboardCountryComponent implements OnInit {
   prepareChartData(): void {
     this.brands.forEach((brand: Card) => {
       this.details.single.push({
-        "name": brand.name,
-        "value": brand.count
-      })
+        'name': brand.name,
+        'value': brand.count
+      });
     });
   }
 
@@ -83,22 +81,12 @@ export class DashboardCountryComponent implements OnInit {
     }
   };
 
-  dashboardSummary(): void {
-    this.detailsShown = !this.detailsShown;
-    if(this.detailsShown == true) {
-      localStorage.setItem('dashboard-country-details-shown', 'true')
-    } else {
-      localStorage.setItem('dashboard-country-details-shown', 'false')
-    }
-  }
-
   openFromChart(event: any) {
     this.router.navigateByUrl('/dashboard/' + this.country + '/' + event.name.split(' ').join(''));
   }
 
   changeChartType(value: string): void {
-    let target: any = this.chartTypes.filter(chart => chart.value === value);
     this.selectedChart = value;
-    localStorage.setItem('dashboard-country-chart', value);
+    localStorage.setItem(CONSTANTS.SELECTED_CHART.DASHBOARD_COUNTRY, value);
   };
 }

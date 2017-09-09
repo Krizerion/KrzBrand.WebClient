@@ -13,13 +13,13 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class DashboardComponent implements OnInit {
   selectedChart: string;
   pageTitle: string;
-  allProducts: Product[];
+  allProducts: Product[] = [];
   countries: Card[] = [];
-  detailsShown: any;
+  detailsShown: boolean = false;
   chartTypes: any[] = CONSTANTS.CHART_TYPES;
   details: any = {
     single: []
-  }
+  };
 
   constructor(
     private productDataService: ProductService,
@@ -29,14 +29,12 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.allProducts = [];
     this.allProducts = this.globalDataService.allProducts;
     this.getCountriesGroups();
     this.prepareChartData();
     this.pageTitle = this.allProducts.length + ' PRODUCTS FOUND FOR ALL COUNTRIES';
-    this.selectedChart = localStorage.getItem('dashboard-chart') || this.chartTypes[0].value;
-    this.detailsShown = localStorage.getItem('dashboard-details-shown') || false;
-    localStorage.setItem('dashboard-chart', this.selectedChart);
+    this.selectedChart = localStorage.getItem(CONSTANTS.SELECTED_CHART.DASHBOARD) || this.chartTypes[0].value;
+    localStorage.setItem(CONSTANTS.SELECTED_CHART.DASHBOARD, this.selectedChart);
   }
 
   getCountriesGroups(): void {
@@ -68,9 +66,9 @@ export class DashboardComponent implements OnInit {
   prepareChartData(): void {
     this.countries.forEach((country: Card) => {
       this.details.single.push({
-        "name": country.name,
-        "value": country.count
-      })
+        'name': country.name,
+        'value': country.count
+      });
     });
   }
 
@@ -84,18 +82,8 @@ export class DashboardComponent implements OnInit {
     this.router.navigateByUrl('/dashboard/' + event.name.split(' ').join(''));
   }
 
-  dashboardSummary(): void {
-    this.detailsShown = !this.detailsShown;
-    if(this.detailsShown == true) {
-      localStorage.setItem('dashboard-details-shown', 'true')
-    } else {
-      localStorage.setItem('dashboard-details-shown', 'false')
-    }
-  }
-
   changeChartType(value: string): void {
-    let target: any = this.chartTypes.filter(chart => chart.value === value);
     this.selectedChart = value;
-    localStorage.setItem('dashboard-chart', value);
+    localStorage.setItem(CONSTANTS.SELECTED_CHART.DASHBOARD, value);
   };
 }

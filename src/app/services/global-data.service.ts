@@ -16,6 +16,7 @@ export class GlobalDataService {
 
   init() {
     return this.productService.getProducts().then(response => {
+        localStorage.clear();
         this.allProducts = response;
         response.forEach((product) => {
           if (this.allCountries.indexOf(product.country) === -1) {

@@ -1,9 +1,9 @@
+import { CONSTANTS } from './../../constants/constants';
 import { Card } from './../../classes/card';
 import { GlobalDataService } from './../../services/global-data.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Product } from './../../classes/product';
 import { Component, OnInit } from '@angular/core';
-import { CONSTANTS } from "../../constants/constants";
 
 @Component({
   selector: 'krz-brand-dashboard-brand',
@@ -16,12 +16,12 @@ export class DashboardBrandComponent implements OnInit {
   brand: string;
   country: string;
   pageTitle: string;
-  productsForBrand: Product[];
+  productsForBrand: Product[] = [];
   types: Card[] = [];
-  detailsShown: any;
+  detailsShown: boolean = false;
   details: any = {
     single: []
-  }
+  };
 
   constructor(
     private route: ActivatedRoute,
@@ -34,14 +34,13 @@ export class DashboardBrandComponent implements OnInit {
        this.brand = params['brand'];
        this.country = params['country'];
     });
-    this.productsForBrand = this.globalDataService.allProducts
-        .filter(product => product.brand === this.brand && product.country === this.country);
-    this.pageTitle = this.productsForBrand.length + " PRODUCTS FOUND FOR " + this.brand.toUpperCase() + " IN " + this.country.toUpperCase();
+    this.productsForBrand = this.globalDataService.allProducts.filter
+      (product => product.brand === this.brand && product.country === this.country);
+    this.pageTitle = this.productsForBrand.length + ' PRODUCTS FOUND FOR ' + this.brand.toUpperCase() + ' IN ' + this.country.toUpperCase();
     this.getBrandsGroups();
     this.prepareChartData();
-    this.selectedChart = localStorage.getItem('dashboard-brand-chart') || this.chartTypes[0].value;
-    this.detailsShown = localStorage.getItem('dashboard-brand-details-shown') || false;
-    localStorage.setItem('dashboard-brand-chart', this.selectedChart);
+    this.selectedChart = localStorage.getItem(CONSTANTS.SELECTED_CHART.DASHBOARD_BRAND) || this.chartTypes[0].value;
+    localStorage.setItem(CONSTANTS.SELECTED_CHART.DASHBOARD_BRAND, this.selectedChart);
   }
 
   getBrandsGroups(): void {
@@ -73,9 +72,9 @@ export class DashboardBrandComponent implements OnInit {
   prepareChartData(): void {
     this.types.forEach((type: Card) => {
       this.details.single.push({
-        "name": type.name,
-        "value": type.count
-      })
+        'name': type.name,
+        'value': type.count
+      });
     });
   }
 
@@ -89,15 +88,6 @@ export class DashboardBrandComponent implements OnInit {
     }
   };
 
-  dashboardSummary(): void {
-    this.detailsShown = !this.detailsShown;
-    if(this.detailsShown == true) {
-      localStorage.setItem('dashboard-brand-details-shown', 'true')
-    } else {
-      localStorage.setItem('dashboard-brand-details-shown', 'false')
-    }
-  }
-
   openFromChart(event: any) {
     this.router.navigateByUrl(
       '/dashboard/' +
@@ -107,8 +97,7 @@ export class DashboardBrandComponent implements OnInit {
   }
 
   changeChartType(value: string): void {
-    let target: any = this.chartTypes.filter(chart => chart.value === value);
     this.selectedChart = value;
-    localStorage.setItem('dashboard-brand-chart', value);
+    localStorage.setItem(CONSTANTS.SELECTED_CHART.DASHBOARD_BRAND, value);
   };
 }

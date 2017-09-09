@@ -1,6 +1,6 @@
 {
   "name": "krz-brand",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Web Application for Big Data",
   "scripts": {
     "preinstall": "npm i typings -g",
