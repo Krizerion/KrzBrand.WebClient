@@ -25,9 +25,25 @@
                 <button class="btn btn-large btn-primary" (click)="summary()">Toggle Summary</button>
             </div>
         </div>
+        <div class="row krz-summary-row" *ngIf="detailsShown">
+            <select [ngModel]="selectedChart" (change)="changeChartType($event.target.value)">
+                <option *ngFor="let chart of chartTypes" value="{{chart.value}}">{{chart.name}}</option>
+            </select>
+        </div>
         <div class="row krz-details-page" *ngIf="detailsShown">
-                <ngx-charts-bar-horizontal
-                class="chart-container"
+            <ngx-charts-pie-chart
+                *ngIf="selectedChart === 'pie'"
+                [results]="details.single"
+                [legend]="true"
+                [explodeSlices]="false"
+                [labels]="true">
+            </ngx-charts-pie-chart>
+            <ngx-charts-advanced-pie-chart
+                *ngIf="selectedChart === 'pie-advanced'"
+                [results]="details.single">
+            </ngx-charts-advanced-pie-chart>
+            <ngx-charts-bar-horizontal
+                *ngIf="selectedChart === 'bar-horizontal'"
                 [results]="details.single"
                 [xAxis]="true"
                 [yAxis]="true"
@@ -39,10 +55,29 @@
                 [xAxisLabel]="'Total Sales'"
                 [yAxisLabel]="'Year'"
                 [showGridLines]="true"
-                [barPadding]="4"
                 [roundDomains]="false"
                 [roundEdges]="true">
-              </ngx-charts-bar-horizontal>
+            </ngx-charts-bar-horizontal>
+            <ngx-charts-bar-vertical
+                *ngIf="selectedChart === 'bar-vertical'"
+                [results]="details.single"
+                [xAxis]="true"
+                [yAxis]="true"
+                [legend]="true"
+                [legendTitle]="'Legend'"
+                [showXAxisLabel]="true"
+                [showYAxisLabel]="true"
+                [tooltipDisabled]="false"
+                [xAxisLabel]="'Year'"
+                [yAxisLabel]="'Total Sales'"
+                [showGridLines]="true"
+                [roundDomains]="false"
+                [roundEdges]="true">
+            </ngx-charts-bar-vertical>
+            <ngx-charts-pie-grid
+                *ngIf="selectedChart === 'pie-grid'"
+                [results]="details.single">
+            </ngx-charts-pie-grid>
         </div>
         <div class="row table-responsive" *ngIf="!detailsShown">
             <table class="table table-striped table-hover ">

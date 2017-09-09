@@ -1,22 +1,13 @@
 {
   "name": "krz-brand",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Web Application for Big Data",
   "scripts": {
     "preinstall": "npm i typings -g",
     "build": "tsc -p src/",
     "build:watch": "tsc -p src/ -w",
-    "build:e2e": "tsc -p e2e/",
     "serve": "lite-server -c=bs-config.js",
-    "prestart": "npm run build",
     "start": "concurrently \"npm run build:watch\" \"npm run serve\"",
-    "pree2e": "npm run build:e2e",
-    "e2e": "concurrently \"npm run serve:e2e\" \"npm run protractor\" --kill-others --success first",
-    "preprotractor": "webdriver-manager update",
-    "protractor": "protractor protractor.config.js",
-    "pretest": "npm run build",
-    "pretest:once": "npm run build",
-    "test:once": "karma start karma.conf.js --single-run",
     "lint": "tslint ./src/**/*.ts -t verbose"
   },
   "keywords": [],

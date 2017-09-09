@@ -1,19 +1,22 @@
+import { CONSTANTS } from './../../constants/constants';
 import { GlobalDataService } from './../../services/global-data.service';
 import { Card } from './../../classes/card';
 import { ProductService } from './../../services/product-data.service';
 import { Product } from './../../classes/product';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'krz-brand-dashboard',
   templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent implements OnInit {
+  selectedChart: string;
   pageTitle: string;
   allProducts: Product[];
   countries: Card[] = [];
-  detailsShown: boolean = false;
+  detailsShown: any;
+  chartTypes: any[] = CONSTANTS.CHART_TYPES;
   details: any = {
     single: []
   }
@@ -21,7 +24,8 @@ export class DashboardComponent implements OnInit {
   constructor(
     private productDataService: ProductService,
     private globalDataService: GlobalDataService,
-    private router: Router
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -30,6 +34,9 @@ export class DashboardComponent implements OnInit {
     this.getCountriesGroups();
     this.prepareChartData();
     this.pageTitle = this.allProducts.length + ' PRODUCTS FOUND FOR ALL COUNTRIES';
+    this.selectedChart = localStorage.getItem('dashboard-chart') || this.chartTypes[0].value;
+    this.detailsShown = localStorage.getItem('dashboard-details-shown') || false;
+    localStorage.setItem('dashboard-chart', this.selectedChart);
   }
 
   getCountriesGroups(): void {
@@ -79,5 +86,16 @@ export class DashboardComponent implements OnInit {
 
   dashboardSummary(): void {
     this.detailsShown = !this.detailsShown;
+    if(this.detailsShown == true) {
+      localStorage.setItem('dashboard-details-shown', 'true')
+    } else {
+      localStorage.setItem('dashboard-details-shown', 'false')
+    }
   }
+
+  changeChartType(value: string): void {
+    let target: any = this.chartTypes.filter(chart => chart.value === value);
+    this.selectedChart = value;
+    localStorage.setItem('dashboard-chart', value);
+  };
 }

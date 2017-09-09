@@ -3,17 +3,20 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Product } from './../../classes/product';
 import { GlobalDataService } from './../../services/global-data.service';
 import { Component, OnInit } from '@angular/core';
+import { CONSTANTS } from "../../constants/constants";
 
 @Component({
   selector: 'krz-brand-details',
   templateUrl: './details.component.html'
 })
 export class DetailsComponent implements OnInit {
-  detailsShown: boolean = false;
+  detailsShown: any;
   private routeSubscribe: any;
   selectedCountry: string;
   selectedBrand: string;
   selectedType: string;
+  selectedChart: string;
+  chartTypes: any[] = CONSTANTS.CHART_TYPES;
   pageTitle: string;
   tableData: Product[];
   brands: Card[] = [];
@@ -22,9 +25,6 @@ export class DetailsComponent implements OnInit {
   allBrands: string[] = [];
   allTypes: string[] = [];
   details: any = {
-    legendTitle: 'Legend',
-    xAxisLabel: 'Total Sales',
-    yAxisLabel: 'Year',
     single: []
   };
 
@@ -46,6 +46,9 @@ export class DetailsComponent implements OnInit {
     this.getProductsBySelectedFilters(this.selectedCountry, this.selectedBrand, this.selectedType);
     this.updateTitle();
     this.prepareChartData();
+    this.selectedChart = localStorage.getItem('details-chart') || this.chartTypes[0].value;
+    this.detailsShown = localStorage.getItem('details-shown') || false;
+    localStorage.setItem('details-chart', this.selectedChart);
   }
 
   prepareChartData() {
@@ -126,5 +129,16 @@ export class DetailsComponent implements OnInit {
 
   summary(): void {
     this.detailsShown = !this.detailsShown;
+    if(this.detailsShown == true) {
+      localStorage.setItem('details-shown', 'true')
+    } else {
+      localStorage.setItem('details-shown', 'false')
+    }
   }
+
+  changeChartType(value: string): void {
+    let target: any = this.chartTypes.filter(chart => chart.value === value);
+    this.selectedChart = value;
+    localStorage.setItem('details-chart', value);
+  };
 }

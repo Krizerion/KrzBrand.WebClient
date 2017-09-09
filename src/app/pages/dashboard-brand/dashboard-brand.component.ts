@@ -3,6 +3,7 @@ import { GlobalDataService } from './../../services/global-data.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Product } from './../../classes/product';
 import { Component, OnInit } from '@angular/core';
+import { CONSTANTS } from "../../constants/constants";
 
 @Component({
   selector: 'krz-brand-dashboard-brand',
@@ -10,12 +11,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DashboardBrandComponent implements OnInit {
   private routeSubscribe: any;
+  selectedChart: string;
+  chartTypes: any[] = CONSTANTS.CHART_TYPES;
   brand: string;
   country: string;
   pageTitle: string;
   productsForBrand: Product[];
   types: Card[] = [];
-  detailsShown: boolean = false;
+  detailsShown: any;
   details: any = {
     single: []
   }
@@ -36,6 +39,9 @@ export class DashboardBrandComponent implements OnInit {
     this.pageTitle = this.productsForBrand.length + " PRODUCTS FOUND FOR " + this.brand.toUpperCase() + " IN " + this.country.toUpperCase();
     this.getBrandsGroups();
     this.prepareChartData();
+    this.selectedChart = localStorage.getItem('dashboard-brand-chart') || this.chartTypes[0].value;
+    this.detailsShown = localStorage.getItem('dashboard-brand-details-shown') || false;
+    localStorage.setItem('dashboard-brand-chart', this.selectedChart);
   }
 
   getBrandsGroups(): void {
@@ -85,6 +91,11 @@ export class DashboardBrandComponent implements OnInit {
 
   dashboardSummary(): void {
     this.detailsShown = !this.detailsShown;
+    if(this.detailsShown == true) {
+      localStorage.setItem('dashboard-brand-details-shown', 'true')
+    } else {
+      localStorage.setItem('dashboard-brand-details-shown', 'false')
+    }
   }
 
   openFromChart(event: any) {
@@ -94,4 +105,10 @@ export class DashboardBrandComponent implements OnInit {
       this.brand + '/' +
       event.name.split(' ').join(''));
   }
+
+  changeChartType(value: string): void {
+    let target: any = this.chartTypes.filter(chart => chart.value === value);
+    this.selectedChart = value;
+    localStorage.setItem('dashboard-brand-chart', value);
+  };
 }
