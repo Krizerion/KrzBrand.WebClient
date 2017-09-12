@@ -1,3 +1,4 @@
+import { RandomGeneratorComponent } from './pages/random-generator/random-generator.component';
 import { MainComponent } from './pages/main/main.component';
 import { DetailsComponent } from './pages/details/details.component';
 import { DashboardBrandComponent } from './pages/dashboard-brand/dashboard-brand.component';
@@ -13,6 +14,7 @@ const routes: Routes = [
   { path: 'dashboard/:country',  component: DashboardCountryComponent },
   { path: 'dashboard/:country/:brand',  component: DashboardBrandComponent },
   { path: 'dashboard/:country/:brand/:type',  component: DetailsComponent },
+  { path: 'random-generator',  component: RandomGeneratorComponent },
   { path: '**', redirectTo: '/main', pathMatch: 'full' },
 ];
 

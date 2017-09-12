@@ -1,3 +1,4 @@
+import { RandomGeneratorComponent } from './pages/random-generator/random-generator.component';
 import { MainComponent } from './pages/main/main.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DetailsComponent } from './pages/details/details.component';
@@ -11,15 +12,14 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 import { AppRoutingModule } from './app-routing.module';
 import { APP_INITIALIZER, forwardRef } from '@angular/core';
-import {NgxChartsModule} from '@swimlane/ngx-charts';
-
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { AppComponent }  from './app.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { DashboardCardComponent } from './components/dashboard-card/dashboard-card.component';
 
 @NgModule({
   imports: [ BrowserModule, HttpModule, AppRoutingModule, FormsModule, BrowserAnimationsModule, NgxChartsModule ],
-  declarations: [ AppComponent, DashboardComponent, DashboardCardComponent,
+  declarations: [ AppComponent, RandomGeneratorComponent, DashboardComponent, DashboardCardComponent, 
     DashboardCountryComponent, DashboardBrandComponent, DetailsComponent, MainComponent ],
   providers: [ ProductService, forwardRef(() => GlobalDataService), {
       provide: APP_INITIALIZER,

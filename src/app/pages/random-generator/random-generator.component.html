@@ -1,0 +1,11 @@
+<div class="container krz-page">
+    <div class="row">
+        <div>
+            Number of items:  <input [(ngModel)]="itemsCount" type="number" />
+            <p class="text-danger">ATTENTION: Generating more than 100 000 products will have a slight delay based on your computer speed</p>
+        </div>
+    </div>
+    <div class="row">
+        <button (click)="generateAndDownload()">Generate and Download</button>
+    </div>
+</div>
